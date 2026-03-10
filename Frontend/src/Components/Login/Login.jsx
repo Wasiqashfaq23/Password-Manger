@@ -11,7 +11,7 @@ const schema = yup
   })
   .required();
 
-const Login = () => {
+const Login = ({ setCurrPage }) => {
   const {
     register,
     handleSubmit,
@@ -26,32 +26,31 @@ const Login = () => {
       credentials: "include",
     });
     const result = await res.json();
-    console.log(result);
-    console.log(data);
+    if (result === "Login Successful") {
+      setCurrPage("dashboard");
+    }
   };
 
   return (
     <>
-    <Navbar/>
-    <div className="login-container">
-      <div className="login-card">
-        <h2>Login</h2>
-        <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-          <div className="form-group">
-            <input {...register("email")} placeholder="Email" />
-            <p className="error">{errors.email?.message}</p>
-          </div>
-          <div className="form-group">
-            <input {...register("password")} type="password" placeholder="Password" />
-            <p className="error">{errors.password?.message}</p>
-          </div>
-          <button type="submit" className="login-btn">Login</button>
-        </form>
-        <p className="signup-link">
-          Don't have an account? <a href="/signup">Sign up</a>
-        </p>
+      <div className="login-container">
+        <div className="login-card">
+          <h2>Login</h2>
+          <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-group">
+              <input {...register("email")} placeholder="Email" />
+              <p className="error">{errors.email?.message}</p>
+            </div>
+            <div className="form-group">
+              <input {...register("password")} type="password" placeholder="Password" />
+              <p className="error">{errors.password?.message}</p>
+            </div>
+            <button type="submit" className="login-btn">Login</button>
+          </form>
+          <p className="signup-link">
+          </p>
+        </div>
       </div>
-    </div>
     </>
   );
 };

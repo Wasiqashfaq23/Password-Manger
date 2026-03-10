@@ -1,14 +1,13 @@
 import React from "react";
 import "./Navbar.css";
 
-const Navbar = () => {
+const Navbar = ({setCurrPage}) => {
   return (
     <nav className="navbar">
       <div className="logo">PwdManager</div>
       <div className="nav-links">
-        <a href="/">Home</a>
-        <a href="/login">Login</a>
-        <a href="/signup">Sign Up</a>
+        <a onClick={()=>setCurrPage("login")}>Login</a>
+        <a onClick={()=>setCurrPage("signup")}>Sign Up</a>
       </div>
     </nav>
   );

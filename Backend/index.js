@@ -17,6 +17,8 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -25,7 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser()); 
 app.use(checkForAuthentication)
 app.use(express.static("Public"));
-app.use("/",userRouter)
+app.use("/",checkForAuthentication,userRouter)
 app.use("/password",checkForAuthentication,passRouter)
 
 app.listen(port,()=>{

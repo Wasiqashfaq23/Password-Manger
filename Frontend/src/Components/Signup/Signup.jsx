@@ -13,7 +13,7 @@ const schema = yup
   })
   .required();
 
-const Signup = () => {
+const Signup = ({setCurrPage}) => {
   const {
     register,
     handleSubmit,
@@ -28,13 +28,13 @@ const Signup = () => {
       credentials: "include",
     });
     const result = await res.json();
-    console.log(result);
-    console.log(data);
+         if (result === "Signup Successfull") {
+      setCurrPage("login");
+    }
   };
 
   return (
     <>
-    <Navbar/>
     <div className="signup-container">
       <div className="signup-card">
         <h2>Sign Up</h2>
@@ -57,7 +57,6 @@ const Signup = () => {
           <button type="submit" className="signup-btn">Sign Up</button>
         </form>
         <p className="login-link">
-          Already have an account? <a href="/login">Login</a>
         </p>
       </div>
     </div>

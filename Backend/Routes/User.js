@@ -1,11 +1,11 @@
 const express=require("express")
 const router=express.Router()
-const {renderLogin,renderSignup,handleLogin,handleSignup}=require("../Controller/User")
+const {handleLogin,handleSignup,handleLogout}=require("../Controller/User")
 
-router.get('/login',renderLogin);
 router.post('/login',handleLogin);
 
-router.get('/signup',renderSignup)
 router.post('/signup',handleSignup)
+
+router.post('/logout',handleLogout)
 
 module.exports = router;

@@ -1,34 +1,35 @@
 const { setUser } = require("../Services/Auth")
-const {User}=require("../Model/User")
+const { User } = require("../Model/User")
 
-async function handleLogin(req,res){
+async function handleLogin(req, res) {
     const { email, password } = req.body
     const user = await User.findOne({
         email, password
     })
     if (!user) { return res.json("Invalid Username or Password") }
     const token = setUser(user)
-    res.cookie("token",token)
-    return res.json("Login Successfull")
+    res.cookie("token", token)
+    return res.json("Login Successful")
 }
 
-async function handleSignup(req,res){
-        const { userName, email, password } = req.body;
+async function handleSignup(req, res) {
+    const { userName, email, password } = req.body;
     await User.create({
         userName,
         email,
         password,
     })
-    return res.json("Successfull signup")
+    return res.json("Sign Successful")
 }
 
-
-async function renderLogin(req,res){
-    return res.json("no")
+async function handleLogout(req, res) {
+    req.user = null
+    res.cookie("token", "", {
+        httpOnly: true,
+        expires: new Date(0),
+        sameSite: "lax",
+    });
+    res.json("Logout Successful")
 }
 
-async function renderSignup(req,res){
-    return res.json("no")
-}
-
-module.exports={renderLogin,renderSignup,handleLogin,handleSignup}
+module.exports = {handleLogin, handleSignup,handleLogout }

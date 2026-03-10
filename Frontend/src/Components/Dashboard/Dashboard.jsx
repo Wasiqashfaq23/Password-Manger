@@ -1,7 +1,67 @@
 import React from 'react'
 import "./Dashboard.css"
-import Inputs from './Inputs'
-const Dashboard = () => {
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import "./Inputs.css";
+
+const schema = yup.object({
+    service: yup.string().required(),
+    email: yup.string().required().email(),
+    password: yup.string().required(),
+}).required();
+
+
+const Dashboard = ({ setCurrPage }) => {
+
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm({ resolver: yupResolver(schema) });
+
+
+    const [passwords, setpasswords] = useState([])
+    const handleclick = async () => {
+        await fetch("http://localhost:8001/logout", {
+            method: "POST",
+            credentials: "include"
+        });
+        setCurrPage("login")
+    }
+    const fetchPasswords = async () => {
+        const res = await fetch("http://localhost:8001/password", {
+            method: "GET",
+            credentials: "include",
+        });
+        const data = await res.json();
+        setpasswords(data.passwords);
+        console.log(data.passwords)
+    };
+
+    useEffect(() => {
+        (async()=>{
+           await fetchPasswords();
+        })();
+    }, []);
+
+
+
+    const onSubmit = async (data) => {
+        await fetch("http://localhost:8001/password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+            credentials: "include",
+        });
+        reset();
+        fetchPasswords();
+    };
+
     return (
         <>
             <div className="dashboard-container">
@@ -11,7 +71,7 @@ const Dashboard = () => {
                     <div className="logo">Password Manager</div>
                     <div className="user-info">
                         <span>Welcome, Ahsan</span>
-                        <button className="logout-btn">Logout</button>
+                        <button className="logout-btn" onClick={handleclick}>Logout</button>
                     </div>
                 </nav>
 
@@ -20,7 +80,26 @@ const Dashboard = () => {
 
                     {/* Add Password Section */}
                     <section className="add-password">
-                        <Inputs/>
+                        <section className="add-password">
+                            <h2>Add New Password</h2>
+                            <form className="inputs-form" onSubmit={handleSubmit(onSubmit)}>
+                                <div className="form-group">
+                                    <div className="field">
+                                        <input {...register("service")} placeholder="Service" />
+                                        <p className="error">{errors.service?.message}</p>
+                                    </div>
+                                    <div className="field">
+                                        <input {...register("email")} placeholder="Email" />
+                                        <p className="error">{errors.email?.message}</p>
+                                    </div>
+                                    <div className="field">
+                                        <input {...register("password")} placeholder="Password" />
+                                        <p className="error">{errors.password?.message}</p>
+                                    </div>
+                                </div>
+                                <button className="save-btn" type="submit">Save Password</button>
+                            </form>
+                        </section>
                     </section>
 
                     {/* Password List */}
@@ -36,33 +115,18 @@ const Dashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Github</td>
-                                    <td>ahsan@mail.com</td>
-                                    <td>••••••••</td>
-                                    <td className="actions">
-                                        <button className="edit-btn">Edit</button>
-                                        <button className="delete-btn">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Gmail</td>
-                                    <td>ahsan@mail.com</td>
-                                    <td>••••••••</td>
-                                    <td className="actions">
-                                        <button className="edit-btn">Edit</button>
-                                        <button className="delete-btn">Delete</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Netflix</td>
-                                    <td>ahsan@mail.com</td>
-                                    <td>••••••••</td>
-                                    <td className="actions">
-                                        <button className="edit-btn">Edit</button>
-                                        <button className="delete-btn">Delete</button>
-                                    </td>
-                                </tr>
+                                {passwords && passwords.length > 0 &&
+                                    passwords.map((p) => (
+                                        <tr key={p._id}>
+                                            <td>{p.service}</td>
+                                            <td>{p.email}</td>
+                                            <td>{p.password}</td>
+                                            <td className="actions">
+                                                <button className="edit-btn">Edit</button>
+                                                <button className="delete-btn">Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))}
                             </tbody>
                         </table>
                     </section>

@@ -23,4 +23,6 @@
 
 .nav-links a:hover {
   color: #2980b9;
+  cursor: pointer;
+  text-decoration: underline;
 }
