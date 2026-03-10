@@ -1,0 +1,68 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import "./Signup.css";
+import Navbar from "../Navbar";
+
+const schema = yup
+  .object({
+    userName: yup.string().required("Username is required").min(6, "Username must be at least 6 characters"),
+    email: yup.string().required("Email is required").email("Enter a valid email"),
+    password: yup.string().required("Password is required").min(8, "Password must be at least 8 characters"),
+  })
+  .required();
+
+const Signup = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
+
+  const onSubmit = async (data) => {
+    const res = await fetch("http://localhost:8001/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+      credentials: "include",
+    });
+    const result = await res.json();
+    console.log(result);
+    console.log(data);
+  };
+
+  return (
+    <>
+    <Navbar/>
+    <div className="signup-container">
+      <div className="signup-card">
+        <h2>Sign Up</h2>
+        <form className="signup-form" onSubmit={handleSubmit(onSubmit)}>
+          <div className="form-group">
+            <input {...register("userName")} placeholder="Username" />
+            <p className="error">{errors.userName?.message}</p>
+          </div>
+
+          <div className="form-group">
+            <input {...register("email")} placeholder="Email" />
+            <p className="error">{errors.email?.message}</p>
+          </div>
+
+          <div className="form-group">
+            <input {...register("password")} type="password" placeholder="Password" />
+            <p className="error">{errors.password?.message}</p>
+          </div>
+
+          <button type="submit" className="signup-btn">Sign Up</button>
+        </form>
+        <p className="login-link">
+          Already have an account? <a href="/login">Login</a>
+        </p>
+      </div>
+    </div>
+    </>
+  );
+};
+
+export default Signup;

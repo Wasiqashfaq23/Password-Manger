@@ -1,0 +1,156 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px 40px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.navbar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.navbar .user-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.logout-btn {
+  padding: 8px 15px;
+  border: none;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Main Content */
+.main-content {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* Add Password Form */
+.add-password {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+
+.add-password h2 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.form-group {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.save-btn {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Password List Table */
+.password-list {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.password-list h2 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: #f4f4f4;
+  color: #555;
+}
+
+thead th {
+  padding: 10px;
+  text-align: left;
+}
+
+tbody td {
+  padding: 12px 10px;
+  border-top: 1px solid #eee;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #27ae60;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}

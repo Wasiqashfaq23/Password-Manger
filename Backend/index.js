@@ -8,9 +8,17 @@ const passRouter=require("./Routes/savedPasswords")
 const userRouter=require("./Routes/User")
 
 const {checkForAuthentication}=require("./Middleware/Auth")
+const cors = require("cors");
+
 
 connectToMongo("mongodb://localhost:27017/pwdmgr").then(()=>{console.log("Mongo connected")})
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false })); 
@@ -18,7 +26,7 @@ app.use(cookieParser());
 app.use(checkForAuthentication)
 app.use(express.static("Public"));
 app.use("/",userRouter)
-app.use("/password",passRouter)
+app.use("/password",checkForAuthentication,passRouter)
 
 app.listen(port,()=>{
     console.log("Listening at port",port)
