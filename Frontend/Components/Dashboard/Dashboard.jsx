@@ -9,7 +9,7 @@ import "./Inputs.css";
 
 const schema = yup.object({
     service: yup.string().required(),
-    email: yup.string().required().email(),
+    email: yup.string().required(),
     password: yup.string().required(),
 }).required();
 
@@ -61,6 +61,12 @@ const Dashboard = ({ setCurrPage }) => {
         reset();
         fetchPasswords();
     };
+    const handleDelete=({id})=>{
+const _id=id
+    }
+    const handleEdit=({id})=>{
+const _id= id
+    }
 
     return (
         <>
@@ -122,8 +128,8 @@ const Dashboard = ({ setCurrPage }) => {
                                             <td>{p.email}</td>
                                             <td>{p.password}</td>
                                             <td className="actions">
-                                                <button className="edit-btn">Edit</button>
-                                                <button className="delete-btn">Delete</button>
+                                                <button className="edit-btn" onClick={handleEdit(p._id)}>Edit</button>
+                                                <button className="delete-btn" onClick={handleDelete(p._id)}>Delete</button>
                                             </td>
                                         </tr>
                                     ))}

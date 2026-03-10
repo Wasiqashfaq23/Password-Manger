@@ -17,7 +17,7 @@
   background-color: #fff;
   padding: 30px 25px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   width: 350px;
 }
 
@@ -82,3 +82,4 @@
 .login-link a:hover {
   text-decoration: underline;
 }
+

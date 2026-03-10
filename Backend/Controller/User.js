@@ -14,6 +14,8 @@ async function handleLogin(req, res) {
 
 async function handleSignup(req, res) {
     const { userName, email, password } = req.body;
+    const alreadyPresent=User.findOne({email})
+    if(alreadyPresent){return res.json("Email already registered")}
     await User.create({
         userName,
         email,

@@ -1,8 +1,8 @@
 import React from 'react'
-import Signup from './Components/Signup/Signup'
-import Login from './Components/Login/Login'
-import Dashboard from './Components/Dashboard/Dashboard'
-import Navbar from './Components/Navbar'
+import Signup from '../Components/Signup/Signup'
+import Login from '../Components/Login/Login'
+import Dashboard from '../Components/Dashboard/Dashboard'
+import Navbar from '../Components/Navbar'
 import { useState } from 'react'
 
 const App = () => {

@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "./Login.css";
-import Navbar from "../Navbar";
+import { useState } from "react";
 
 const schema = yup
   .object({
@@ -12,13 +12,16 @@ const schema = yup
   .required();
 
 const Login = ({ setCurrPage }) => {
+  const [error, seterror] = useState("")
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (data) => {
+    reset()
     const res = await fetch("http://localhost:8001/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -29,8 +32,11 @@ const Login = ({ setCurrPage }) => {
     if (result === "Login Successful") {
       setCurrPage("dashboard");
     }
+    if(result== "Invalid Username or Password"){
+      seterror(result);
+      return;
+    }
   };
-
   return (
     <>
       <div className="login-container">
@@ -49,6 +55,7 @@ const Login = ({ setCurrPage }) => {
           </form>
           <p className="signup-link">
           </p>
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </div>
       </div>
     </>
