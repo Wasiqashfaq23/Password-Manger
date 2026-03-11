@@ -22,7 +22,7 @@ const Signup = ({ setCurrPage }) => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const onSubmit = async (data) => {
-    const res = await fetch("http://localhost:8001/signup", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

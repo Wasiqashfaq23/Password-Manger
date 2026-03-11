@@ -38,14 +38,14 @@ const Dashboard = ({ setCurrPage }) => {
 
 
     const handleclick = async () => {
-        await fetch("http://localhost:8001/logout", {
+        await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
             method: "POST",
             credentials: "include"
         });
         setCurrPage("login")
     }
     const fetchPasswords = async () => {
-        const res = await fetch("http://localhost:8001/password", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/password`, {
             method: "GET",
             credentials: "include",
         });
@@ -53,7 +53,7 @@ const Dashboard = ({ setCurrPage }) => {
         setpasswords(data.passwords);
     };
     const fetchUser = async () => {
-        const res = await fetch("http://localhost:8001/me", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/me`, {
             credentials: "include",
 
         })
@@ -71,7 +71,7 @@ const Dashboard = ({ setCurrPage }) => {
 
 
     const onSubmit = async (data) => {
-        const res = await fetch("http://localhost:8001/password", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/password`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
@@ -90,7 +90,7 @@ const Dashboard = ({ setCurrPage }) => {
         setEditData({ service: p.service, email: p.email, password: p.password });
     }
     const handleSave = async () => {
-        await fetch(`http://localhost:8001/password/${editId}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/password/${editId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(editData),
@@ -100,7 +100,7 @@ const Dashboard = ({ setCurrPage }) => {
         setEditId(null)
     }
     const handleDelete = async (id) => {
-        await fetch(`http://localhost:8001/password/${id}`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/password/${id}`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
             credentials: "include",

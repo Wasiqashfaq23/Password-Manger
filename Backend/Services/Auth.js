@@ -1,5 +1,4 @@
 const jwt=require("jsonwebtoken")
-const secret="mypasswordmanager1234"
 
 function setUser(user){
     const payload={
@@ -7,13 +6,13 @@ function setUser(user){
         email:user.email,
         password:user.password,
     }
-    return jwt.sign(payload,secret)
+    return jwt.sign(payload, process.env.JWT_SECRET)
 }
 
 function getUser(token){
     if(!token)return null;
     try {
-        return jwt.verify(token, secret)
+        return jwt.verify(token,  process.env.JWT_SECRET)
     } catch (error) {
         return null
     }

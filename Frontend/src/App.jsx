@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 const App = () => {
   const [currPage, setCurrPage] = useState("login")
   async function handleRedirect() {
-    const res = await fetch("http://localhost:8001/verify-cookie", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/verify-cookie`, {
       method: "GET",
       credentials: "include",
     })

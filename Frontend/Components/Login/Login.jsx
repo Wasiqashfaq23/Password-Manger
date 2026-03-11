@@ -3,7 +3,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "./Login.css";
 import { useState } from "react";
-import { GoEyeClosed,GoEye } from "react-icons/go";
 
 const schema = yup
   .object({
@@ -23,7 +22,7 @@ const Login = ({ setCurrPage }) => {
 
   const onSubmit = async (data) => {
     reset()
-    const res = await fetch("http://localhost:8001/login", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
