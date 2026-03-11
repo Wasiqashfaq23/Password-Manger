@@ -1,7 +1,11 @@
-[build]
-builder = "NIXPACKS"
-buildCommand = "npm install"
-nixpacksPlan = '{"providers":["node"]}'
-
-[deploy]
-startCommand = "node index.js"
+{
+  "$schema": "https://schema.railpack.com",
+  "steps": {
+    "install": {
+      "commands": ["npm install"]
+    }
+  },
+  "deploy": {
+    "startCommand": "node index.js"
+  }
+}
