@@ -14,7 +14,7 @@ async function handleLogin(req, res) {
 
 async function handleSignup(req, res) {
     const { userName, email, password } = req.body;
-    const alreadyPresent = User.findOne({ email })
+    const alreadyPresent =await User.findOne({ email })
     if (alreadyPresent) { return res.json("Email already registered") }
     await User.create({
         userName,
@@ -39,8 +39,18 @@ async function fetchUser(req, res) {
     if (!token) return
     const userFromToken = getUser(token);
     const user = await User.findById(userFromToken._id);
-    if(!user) return res.json("No user found");
-    return res.status(200).json(user)
+    return res.json(user)
 }
 
-module.exports = { handleLogin, handleSignup, handleLogout, fetchUser }
+async function verifyCookie(req, res) {
+    const token = req.cookies.token;
+    if (!token) return
+    const userFromToken = getUser(token);
+    const user = await User.findById(userFromToken._id);
+    if(user) {
+        return res.json(user).status(200)
+    }
+        return res.status(401).json("No user found");
+}
+
+module.exports = { handleLogin, handleSignup, handleLogout, fetchUser,verifyCookie }

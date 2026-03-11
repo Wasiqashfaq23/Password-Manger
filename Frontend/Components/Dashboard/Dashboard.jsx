@@ -114,7 +114,7 @@ const Dashboard = ({ setCurrPage }) => {
 
                 {/* Navbar */}
                 <nav className="navbar">
-                    <div className="logo">Password Manager</div>
+                    <div className="logo">Vaultly</div>
                     <div className="user-info">
                         <span>Welcome, {user}</span>
                         <button className="logout-btn" onClick={handleclick}>Logout</button>

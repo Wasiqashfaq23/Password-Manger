@@ -1,12 +1,29 @@
-import React from 'react'
 import Signup from '../Components/Signup/Signup'
 import Login from '../Components/Login/Login'
 import Dashboard from '../Components/Dashboard/Dashboard'
 import Navbar from '../Components/Navbar'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const App = () => {
   const [currPage, setCurrPage] = useState("login")
+  async function handleRedirect() {
+    const res = await fetch("http://localhost:8001/verify-cookie", {
+      method: "GET",
+      credentials: "include",
+    })
+    console.log(res.ok)
+    if (res.ok) {
+      setCurrPage("dashboard")
+    } else {
+      setCurrPage("login")
+    }
+    
+  }
+  useEffect(() => {
+    (async()=>{
+      await handleRedirect();
+    })()
+  }, [])
   return (
     <>
       {(currPage === "login" || currPage === "signup") && (
