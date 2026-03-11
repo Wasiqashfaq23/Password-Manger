@@ -1,4 +1,5 @@
 import "./Dashboard.css"
+import { GoEye, GoEyeClosed } from "react-icons/go";
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useForm } from "react-hook-form";
@@ -17,13 +18,23 @@ const Dashboard = ({ setCurrPage }) => {
     const [editData, setEditData] = useState({})
     const [passwords, setpasswords] = useState([])
     const [user, setuser] = useState("")
-    const [error,seterror]=useState("")
+    const [error, seterror] = useState("")
+    const [showInput, setShowInput] = useState(false);
+    const [visiblePasswords, setVisiblePasswords] = useState({})
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors },
     } = useForm({ resolver: yupResolver(schema) });
+
+    const toggleVisibility = (id) => {
+        setVisiblePasswords((prev)=>({
+            ...prev,
+            [id]: !prev[id],
+        }))
+    }
+
 
 
     const handleclick = async () => {
@@ -46,8 +57,9 @@ const Dashboard = ({ setCurrPage }) => {
             credentials: "include",
 
         })
-        const data = res.json()
-        setuser(data)
+        if (res.ok) setCurrPage("dashboard");
+        const data = await res.json()
+        setuser(data.userName)
     }
     useEffect(() => {
         (async () => {
@@ -59,14 +71,14 @@ const Dashboard = ({ setCurrPage }) => {
 
 
     const onSubmit = async (data) => {
-        const res=  await fetch("http://localhost:8001/password", {
+        const res = await fetch("http://localhost:8001/password", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
             credentials: "include",
         });
         reset();
-        const dt=await res.json()
+        const dt = await res.json()
         fetchPasswords();
         seterror(dt)
         setTimeout(() => {
@@ -95,10 +107,6 @@ const Dashboard = ({ setCurrPage }) => {
         });
         fetchPasswords();
     }
-
-
-
-
 
     return (
         <>
@@ -131,7 +139,11 @@ const Dashboard = ({ setCurrPage }) => {
                                         <p className="error">{errors.email?.message}</p>
                                     </div>
                                     <div className="field">
-                                        <input {...register("password")} placeholder="Password" />
+                                        <div style={{ position: "relative" }}>
+                                            <input {...register("password")} type={showInput ? "text" : "password"} placeholder="Password" />
+                                            <span className="show-input" onClick={() => setShowInput(!showInput)}>   {showInput ? <GoEye /> : <GoEyeClosed />}
+                                            </span>
+                                        </div>
                                         <p className="error">{errors.password?.message}</p>
                                     </div>
                                 </div>
@@ -171,7 +183,11 @@ const Dashboard = ({ setCurrPage }) => {
                                                 <>
                                                     <td>{p.service}</td>
                                                     <td>{p.email}</td>
-                                                    <td>{p.password}</td>
+                                                    <td>{visiblePasswords[p._id] ? p.password : "********"}
+                                                        <span onClick={() => { toggleVisibility(p._id) }}>
+                                                            {visiblePasswords[p._id] ? <GoEye /> : <GoEyeClosed />}
+                                                        </span>
+                                                    </td>
                                                     <td className="actions">
                                                         <button className="edit-btn" onClick={() => handleEdit(p)}>Edit</button>
                                                         <button className="delete-btn" onClick={() => handleDelete(p._id)}>Delete</button>

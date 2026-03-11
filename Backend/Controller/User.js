@@ -39,7 +39,8 @@ async function fetchUser(req, res) {
     if (!token) return
     const userFromToken = getUser(token);
     const user = await User.findById(userFromToken._id);
-    return res.json(user.userName)
+    if(!user) return res.json("No user found");
+    return res.status(200).json(user)
 }
 
 module.exports = { handleLogin, handleSignup, handleLogout, fetchUser }

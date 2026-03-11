@@ -3,6 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "./Login.css";
 import { useState } from "react";
+import { GoEyeClosed,GoEye } from "react-icons/go";
 
 const schema = yup
   .object({
@@ -32,7 +33,7 @@ const Login = ({ setCurrPage }) => {
     if (result === "Login Successful") {
       setCurrPage("dashboard");
     }
-    if(result== "Invalid Username or Password"){
+    if (result == "Invalid Username or Password") {
       seterror(result);
       return;
     }
@@ -48,7 +49,9 @@ const Login = ({ setCurrPage }) => {
               <p className="error">{errors.email?.message}</p>
             </div>
             <div className="form-group">
-              <input {...register("password")} type="password" placeholder="Password" />
+              <div>
+                <input {...register("password")} type="password" placeholder="Password" />
+              </div>
               <p className="error">{errors.password?.message}</p>
             </div>
             <button type="submit" className="login-btn">Login</button>
