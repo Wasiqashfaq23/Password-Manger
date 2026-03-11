@@ -1,4 +1,4 @@
-const { setUser } = require("../Services/Auth")
+const { setUser, getUser } = require("../Services/Auth")
 const { User } = require("../Model/User")
 
 async function handleLogin(req, res) {
@@ -14,8 +14,8 @@ async function handleLogin(req, res) {
 
 async function handleSignup(req, res) {
     const { userName, email, password } = req.body;
-    const alreadyPresent=User.findOne({email})
-    if(alreadyPresent){return res.json("Email already registered")}
+    const alreadyPresent = User.findOne({ email })
+    if (alreadyPresent) { return res.json("Email already registered") }
     await User.create({
         userName,
         email,
@@ -34,4 +34,12 @@ async function handleLogout(req, res) {
     res.json("Logout Successful")
 }
 
-module.exports = {handleLogin, handleSignup,handleLogout }
+async function fetchUser(req, res) {
+    const token = req.cookies.token;
+    if (!token) return
+    const userFromToken = getUser(token);
+    const user = await User.findById(userFromToken._id);
+    return res.json(user.userName)
+}
+
+module.exports = { handleLogin, handleSignup, handleLogout, fetchUser }

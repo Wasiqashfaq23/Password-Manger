@@ -8,7 +8,7 @@ async function createFields(req, res) {
         email,
         password,
     })
-    if(available){return res.json ("Already presnent in the Database")}
+    if(available){return res.json ("Given data is already present")}
     if (!email || !password || !service) { return res.json("All fields are required") }
     await Password.create({
         email: email,
@@ -37,7 +37,6 @@ async function deleteField(req, res) {
         createdBy: creator,
     })
     if (!del) return res.json({ message: "Password not found" });
-    console.log(del)
     return res.json("delete Success")
 }
 
@@ -48,8 +47,6 @@ async function updateField(req, res) {
         return res.json({ message: "ID is required" })
     }
     try {
-
-        // updating the field
         const updated = await Password.findByIdAndUpdate(
             id,
             {

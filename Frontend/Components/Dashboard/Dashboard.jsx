@@ -1,11 +1,9 @@
-import React from 'react'
 import "./Dashboard.css"
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import "./Inputs.css";
 
 const schema = yup.object({
     service: yup.string().required(),
@@ -15,8 +13,11 @@ const schema = yup.object({
 
 
 const Dashboard = ({ setCurrPage }) => {
-
-
+    const [editId, setEditId] = useState(null)
+    const [editData, setEditData] = useState({})
+    const [passwords, setpasswords] = useState([])
+    const [user, setuser] = useState("")
+    const [error,seterror]=useState("")
     const {
         register,
         handleSubmit,
@@ -25,7 +26,6 @@ const Dashboard = ({ setCurrPage }) => {
     } = useForm({ resolver: yupResolver(schema) });
 
 
-    const [passwords, setpasswords] = useState([])
     const handleclick = async () => {
         await fetch("http://localhost:8001/logout", {
             method: "POST",
@@ -40,33 +40,65 @@ const Dashboard = ({ setCurrPage }) => {
         });
         const data = await res.json();
         setpasswords(data.passwords);
-        console.log(data.passwords)
     };
+    const fetchUser = async () => {
+        const res = await fetch("http://localhost:8001/me", {
+            credentials: "include",
 
+        })
+        const data = res.json()
+        setuser(data)
+    }
     useEffect(() => {
-        (async()=>{
-           await fetchPasswords();
+        (async () => {
+            await fetchPasswords();
+            await fetchUser();
         })();
     }, []);
 
 
 
     const onSubmit = async (data) => {
-        await fetch("http://localhost:8001/password", {
+        const res=  await fetch("http://localhost:8001/password", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
             credentials: "include",
         });
         reset();
+        const dt=await res.json()
         fetchPasswords();
+        seterror(dt)
+        setTimeout(() => {
+            seterror("")
+        }, 6000);
     };
-    const handleDelete=({id})=>{
-const _id=id
+    const handleEdit = async (p) => {
+        setEditId(p._id)
+        setEditData({ service: p.service, email: p.email, password: p.password });
     }
-    const handleEdit=({id})=>{
-const _id= id
+    const handleSave = async () => {
+        await fetch(`http://localhost:8001/password/${editId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(editData),
+            credentials: "include",
+        })
+        fetchPasswords();
+        setEditId(null)
     }
+    const handleDelete = async (id) => {
+        await fetch(`http://localhost:8001/password/${id}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+        });
+        fetchPasswords();
+    }
+
+
+
+
 
     return (
         <>
@@ -76,7 +108,7 @@ const _id= id
                 <nav className="navbar">
                     <div className="logo">Password Manager</div>
                     <div className="user-info">
-                        <span>Welcome, Ahsan</span>
+                        <span>Welcome, {user}</span>
                         <button className="logout-btn" onClick={handleclick}>Logout</button>
                     </div>
                 </nav>
@@ -95,7 +127,7 @@ const _id= id
                                         <p className="error">{errors.service?.message}</p>
                                     </div>
                                     <div className="field">
-                                        <input {...register("email")} placeholder="Email" />
+                                        <input {...register("email")} placeholder="Email / Username" />
                                         <p className="error">{errors.email?.message}</p>
                                     </div>
                                     <div className="field">
@@ -104,6 +136,7 @@ const _id= id
                                     </div>
                                 </div>
                                 <button className="save-btn" type="submit">Save Password</button>
+                                <p className="error">{error}</p>
                             </form>
                         </section>
                     </section>
@@ -115,7 +148,7 @@ const _id= id
                             <thead>
                                 <tr>
                                     <th>Service</th>
-                                    <th>Email</th>
+                                    <th>Email/Username</th>
                                     <th>Password</th>
                                     <th>Actions</th>
                                 </tr>
@@ -124,13 +157,27 @@ const _id= id
                                 {passwords && passwords.length > 0 &&
                                     passwords.map((p) => (
                                         <tr key={p._id}>
-                                            <td>{p.service}</td>
-                                            <td>{p.email}</td>
-                                            <td>{p.password}</td>
-                                            <td className="actions">
-                                                <button className="edit-btn" onClick={handleEdit(p._id)}>Edit</button>
-                                                <button className="delete-btn" onClick={handleDelete(p._id)}>Delete</button>
-                                            </td>
+                                            {editId === p._id ?
+                                                <>
+                                                    <td><input type="text" value={editData.service} onChange={(e) => setEditData({ ...editData, service: e.target.value })} placeholder='Enter your Service' /></td>
+                                                    <td><input type="text" value={editData.email} onChange={(e) => setEditData({ ...editData, email: e.target.value })} placeholder='Enter Username/Email' /></td>
+                                                    <td><input type="text" value={editData.password} onChange={(e) => setEditData({ ...editData, password: e.target.value })} placeholder='Enter Password' /></td>
+                                                    <td className="actions">
+                                                        <button className="save-changes-btn" onClick={() => handleSave(p)}>Save</button>
+                                                        <button className="delete-btn" onClick={() => setEditId(null)}>Exit</button>
+                                                    </td>
+                                                </>
+                                                :
+                                                <>
+                                                    <td>{p.service}</td>
+                                                    <td>{p.email}</td>
+                                                    <td>{p.password}</td>
+                                                    <td className="actions">
+                                                        <button className="edit-btn" onClick={() => handleEdit(p)}>Edit</button>
+                                                        <button className="delete-btn" onClick={() => handleDelete(p._id)}>Delete</button>
+                                                    </td>
+                                                </>
+                                            }
                                         </tr>
                                     ))}
                             </tbody>
